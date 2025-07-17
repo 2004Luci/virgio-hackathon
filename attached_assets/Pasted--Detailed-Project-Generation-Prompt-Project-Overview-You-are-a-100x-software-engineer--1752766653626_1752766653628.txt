@@ -1,0 +1,202 @@
+# Detailed Project Generation Prompt
+
+## Project Overview
+
+You are a **100x software engineer** with extensive experience in full-stack development, UI/UX design, and enterprise-level application architecture. Your expertise spans modern web technologies, seamless integrations, and creating scalable, maintainable codebases. You have a proven track record of delivering high-quality, production-ready applications with pixel-perfect designs and robust functionality.
+
+## Project Requirements
+
+### Core Project Structure
+Create a **fully integrated e-commerce application** consisting of:
+- **1 Front-end webpage** (customer-facing product page)
+- **2 Admin dashboard pages** (to be detailed in subsequent prompts)
+- **Seamless integration** between all components with shared data models, APIs, and authentication systems
+
+### Front-end Webpage Specifications
+
+#### Design Requirements
+- **Exact clone** of the webpage at: `https://www.virgio.com/products/timeless-charm-alara-viscose-relaxed-lace-tie-pants`
+- **Pixel-perfect reproduction** including:
+  - Layout structure and spacing
+  - Typography (fonts, sizes, weights)
+  - Color schemes and gradients
+  - Button styles and hover effects
+  - Image galleries and zoom functionality
+  - Product information sections
+  - Size selection interface
+  - Add to cart functionality
+  - Navigation elements
+  - Footer design
+  - Responsive behavior across devices
+
+#### Technical Implementation
+- Use **modern web technologies** (HTML5, CSS3, JavaScript/TypeScript)
+- Implement **responsive design** for mobile, tablet, and desktop
+- Include **interactive elements** such as:
+  - Image zoom and gallery navigation
+  - Size selector with visual feedback
+  - Quantity selector
+  - Add to cart animations
+  - Product variant switching
+- Ensure **fast loading times** and optimized performance
+- Implement **SEO best practices**
+
+### Product Data Requirements
+
+#### Product Categories (5 Types)
+Create comprehensive dummy data for exactly **5 product types**:
+
+1. **Dress**
+   - High-quality product images (multiple angles)
+   - Detailed product description
+   - Size variations (XS, S, M, L, XL)
+   - Price information
+   - Material composition
+   - Care instructions
+   - Style details
+
+2. **Top**
+   - Complete image set
+   - Product specifications
+   - Size chart
+   - Styling suggestions
+   - Fabric details
+   - Color variations
+
+3. **Shirt**
+   - Professional product photography
+   - Detailed measurements
+   - Fit information
+   - Brand story
+   - Customer reviews (dummy)
+   - Related products
+
+4. **Co-ord Set**
+   - Coordinated outfit images
+   - Individual piece details
+   - Mix-and-match suggestions
+   - Ensemble pricing
+   - Seasonal relevance
+   - Style guide
+
+5. **Bottoms**
+   - Comprehensive size guide
+   - Fit visualization
+   - Styling recommendations
+   - Fabric technology
+   - Wash instructions
+   - Durability information
+
+#### Data Structure Requirements
+- **Consistent data models** across all product types
+- **Rich product attributes** including:
+  - Product ID, name, description
+  - Multiple image URLs
+  - Pricing (original, sale, discount percentage)
+  - Inventory levels
+  - SKU information
+  - Brand details
+  - Category classifications
+  - Tags and keywords
+  - Customer ratings and reviews
+  - Related products
+  - Size charts and measurements
+  - Care instructions
+  - Material specifications
+
+### Technical Architecture
+
+#### Backend Requirements
+- **RESTful API** or **GraphQL** endpoints
+- **Database design** with proper relationships
+- **Authentication system** (for admin access)
+- **Product management** CRUD operations
+- **Image handling** and optimization
+- **Search and filtering** capabilities
+- **Inventory management** system
+
+#### Frontend Architecture
+- **Component-based structure** (React, Vue, or Angular)
+- **State management** (Redux, Vuex, or NgRx)
+- **Routing system** for navigation
+- **API integration** layer
+- **Error handling** and loading states
+- **Performance optimization** techniques
+
+#### Integration Points
+- **Shared authentication** between frontend and admin dashboards
+- **Real-time data synchronization**
+- **Consistent API endpoints**
+- **Unified styling system** with design tokens
+- **Cross-component communication**
+
+### Development Approach
+
+#### Phase 1: Project Scaffolding
+1. **Set up project structure** with proper folder organization
+2. **Initialize development environment** with necessary tools
+3. **Create base components** and routing structure
+4. **Implement data models** and API structure
+5. **Set up build and deployment** pipeline
+6. **Create responsive layout** foundation
+
+#### Phase 2: Core Implementation
+1. **Implement exact UI clone** with attention to detail
+2. **Integrate product data** with dynamic rendering
+3. **Add interactive functionality** (cart, selections, etc.)
+4. **Implement search and filtering**
+5. **Add loading states** and error handling
+6. **Optimize performance** and accessibility
+
+#### Phase 3: Preparation for Admin Integration
+1. **Create admin authentication** system
+2. **Design admin API endpoints**
+3. **Prepare data management** interfaces
+4. **Set up admin routing** structure
+5. **Create shared components** for admin use
+
+### Quality Standards
+
+#### Code Quality
+- **Clean, maintainable code** with proper documentation
+- **Consistent naming conventions** and code structure
+- **Comprehensive error handling**
+- **Security best practices**
+- **Performance optimization**
+- **Cross-browser compatibility**
+
+#### User Experience
+- **Intuitive navigation** and user flow
+- **Fast loading times** and smooth interactions
+- **Accessibility compliance** (WCAG guidelines)
+- **Mobile-first responsive design**
+- **Smooth animations** and transitions
+
+#### Testing Requirements
+- **Unit tests** for critical components
+- **Integration tests** for API endpoints
+- **Cross-browser testing**
+- **Mobile device testing**
+- **Performance testing**
+
+### Deliverables for Phase 1
+
+1. **Complete project structure** with all necessary files and folders
+2. **Fully functional front-end webpage** that exactly replicates the target URL
+3. **Database schema** with all 5 product types populated
+4. **API endpoints** for product data retrieval
+5. **Responsive design** working across all devices
+6. **Documentation** for project setup and structure
+7. **Preparation framework** for admin dashboard integration
+
+### Success Criteria
+
+- **Pixel-perfect match** to the original webpage design
+- **Fully functional** product browsing and selection
+- **Responsive behavior** across all screen sizes
+- **Fast loading** and smooth user experience
+- **Clean, scalable codebase** ready for admin integration
+- **Comprehensive dummy data** for all 5 product categories
+- **Proper integration points** prepared for admin dashboards
+
+**Note**: This is the foundation phase. Once completed, detailed specifications for the two admin dashboard pages will be provided to complete the integrated system.
