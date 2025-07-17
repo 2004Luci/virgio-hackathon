@@ -178,6 +178,98 @@ export class MemStorage implements IStorage {
         careInstructions: "Machine wash warm, iron if needed",
         materialComposition: "100% Cotton",
         costPerWear: 221
+      },
+      {
+        name: "Sustainable Linen Midi Dress",
+        description: "Elegant linen midi dress with a flattering A-line silhouette, perfect for any occasion.",
+        price: 3490,
+        category: "Dress",
+        collection: "Bloom",
+        fabric: "100% Linen",
+        color: "Sage Green",
+        print: "Solid",
+        fit: "A-Line",
+        features: "Midi Length, Side Pockets",
+        length: "Midi",
+        sizes: ["XS", "S", "M", "L", "XL"],
+        images: [
+          "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=800&q=80",
+          "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?w=800&q=80",
+          "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&q=80"
+        ],
+        thumbnails: [
+          "https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?w=72&h=108&q=80",
+          "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?w=72&h=108&q=80",
+          "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=72&h=108&q=80"
+        ],
+        inStock: true,
+        inventory: { "XS": 4, "S": 7, "M": 10, "L": 12, "XL": 8 },
+        careInstructions: "Machine wash cold, hang dry",
+        materialComposition: "100% Organic Linen",
+        sustainability: "Made from sustainably sourced organic linen, this dress is both stylish and eco-friendly.",
+        modelInfo: "Model is 5'7\" and wearing size S",
+        costPerWear: 387
+      },
+      {
+        name: "Essential Cotton Crop Top",
+        description: "Versatile cotton crop top that pairs perfectly with high-waisted bottoms.",
+        price: 1490,
+        category: "Top",
+        collection: "Essentials",
+        fabric: "100% Cotton",
+        color: "Black",
+        print: "Solid",
+        fit: "Cropped Fit",
+        features: "Crew Neck, Short Sleeves",
+        length: "Crop",
+        sizes: ["XS", "S", "M", "L", "XL"],
+        images: [
+          "https://images.unsplash.com/photo-1583496661160-fb5886a13ba7?w=800&q=80",
+          "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=800&q=80"
+        ],
+        thumbnails: [
+          "https://images.unsplash.com/photo-1583496661160-fb5886a13ba7?w=72&h=108&q=80",
+          "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?w=72&h=108&q=80"
+        ],
+        inStock: true,
+        inventory: { "XS": 8, "S": 12, "M": 15, "L": 10, "XL": 6 },
+        careInstructions: "Machine wash cold, tumble dry low",
+        materialComposition: "100% Organic Cotton",
+        modelInfo: "Model is 5'6\" and wearing size M",
+        costPerWear: 165
+      },
+      {
+        name: "Coordinated Two-Piece Set",
+        description: "Matching crop top and wide-leg pants set in soft organic cotton blend.",
+        price: 4290,
+        originalPrice: 4990,
+        discountPercentage: 14,
+        category: "Co-ord Set",
+        collection: "Harmony",
+        fabric: "Organic Cotton Blend",
+        color: "Cream",
+        print: "Solid",
+        fit: "Relaxed Fit",
+        features: "Two-Piece Set, Matching Design",
+        length: "Regular",
+        sizes: ["XS", "S", "M", "L", "XL"],
+        images: [
+          "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=800&q=80",
+          "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?w=800&q=80",
+          "https://images.unsplash.com/photo-1583496661160-fb5886a13ba7?w=800&q=80"
+        ],
+        thumbnails: [
+          "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=72&h=108&q=80",
+          "https://images.unsplash.com/photo-1596783074918-c84cb06531ca?w=72&h=108&q=80",
+          "https://images.unsplash.com/photo-1583496661160-fb5886a13ba7?w=72&h=108&q=80"
+        ],
+        inStock: true,
+        inventory: { "XS": 3, "S": 6, "M": 8, "L": 5, "XL": 4 },
+        careInstructions: "Machine wash cold, lay flat to dry",
+        materialComposition: "70% Organic Cotton, 30% Recycled Polyester",
+        sustainability: "Made with sustainable materials and responsible manufacturing processes.",
+        modelInfo: "Model is 5'8\" and wearing size S",
+        costPerWear: 477
       }
     ];
 
@@ -219,7 +311,33 @@ export class MemStorage implements IStorage {
 
   async createProduct(insertProduct: InsertProduct): Promise<Product> {
     const id = this.currentProductId++;
-    const product: Product = { ...insertProduct, id };
+    const product: Product = { 
+      id,
+      name: insertProduct.name,
+      description: insertProduct.description,
+      price: insertProduct.price,
+      category: insertProduct.category,
+      sizes: insertProduct.sizes as string[],
+      images: insertProduct.images as string[],
+      thumbnails: insertProduct.thumbnails as string[],
+      inStock: insertProduct.inStock ?? true,
+      inventory: insertProduct.inventory,
+      // Optional fields with default values
+      length: insertProduct.length || null,
+      originalPrice: insertProduct.originalPrice || null,
+      discountPercentage: insertProduct.discountPercentage || null,
+      collection: insertProduct.collection || null,
+      fabric: insertProduct.fabric || null,
+      color: insertProduct.color || null,
+      print: insertProduct.print || null,
+      fit: insertProduct.fit || null,
+      features: insertProduct.features || null,
+      careInstructions: insertProduct.careInstructions || null,
+      materialComposition: insertProduct.materialComposition || null,
+      sustainability: insertProduct.sustainability || null,
+      modelInfo: insertProduct.modelInfo || null,
+      costPerWear: insertProduct.costPerWear || null
+    };
     this.products.set(id, product);
     return product;
   }
@@ -232,7 +350,11 @@ export class MemStorage implements IStorage {
 
   async addToCart(insertItem: InsertCartItem): Promise<CartItem> {
     const id = this.currentCartItemId++;
-    const item: CartItem = { ...insertItem, id };
+    const item: CartItem = { 
+      ...insertItem, 
+      id,
+      quantity: insertItem.quantity || 1
+    };
     this.cartItems.set(id, item);
     return item;
   }
