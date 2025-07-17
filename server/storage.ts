@@ -1,4 +1,6 @@
 import { users, products, cartItems, type User, type InsertUser, type Product, type InsertProduct, type CartItem, type InsertCartItem } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -373,4 +375,107 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user || undefined;
+  }
+
+  async getUserByUsername(username: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user || undefined;
+  }
+
+  async createUser(insertUser: InsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(insertUser)
+      .returning();
+    return user;
+  }
+
+  async getProduct(id: number): Promise<Product | undefined> {
+    const [product] = await db.select().from(products).where(eq(products.id, id));
+    return product || undefined;
+  }
+
+  async getProducts(): Promise<Product[]> {
+    return await db.select().from(products);
+  }
+
+  async getProductsByCategory(category: string): Promise<Product[]> {
+    return await db.select().from(products).where(eq(products.category, category));
+  }
+
+  async createProduct(insertProduct: InsertProduct): Promise<Product> {
+    const [product] = await db
+      .insert(products)
+      .values({
+        ...insertProduct,
+        sizes: insertProduct.sizes as string[],
+        images: insertProduct.images as string[],
+        thumbnails: insertProduct.thumbnails as string[],
+        inventory: insertProduct.inventory as Record<string, number>
+      })
+      .returning();
+    return product;
+  }
+
+  async getCartItems(sessionId: string): Promise<CartItem[]> {
+    return await db.select().from(cartItems).where(eq(cartItems.sessionId, sessionId));
+  }
+
+  async addToCart(insertItem: InsertCartItem): Promise<CartItem> {
+    const [item] = await db
+      .insert(cartItems)
+      .values(insertItem)
+      .returning();
+    return item;
+  }
+
+  async updateCartItem(id: number, quantity: number): Promise<CartItem | undefined> {
+    const [item] = await db
+      .update(cartItems)
+      .set({ quantity })
+      .where(eq(cartItems.id, id))
+      .returning();
+    return item || undefined;
+  }
+
+  async removeFromCart(id: number): Promise<boolean> {
+    const result = await db.delete(cartItems).where(eq(cartItems.id, id));
+    return (result.rowCount || 0) > 0;
+  }
+}
+
+// Initialize with database storage
+const databaseStorage = new DatabaseStorage();
+
+// Initialize sample data in database
+async function initializeSampleData() {
+  try {
+    // Check if products already exist
+    const existingProducts = await databaseStorage.getProducts();
+    if (existingProducts.length > 0) {
+      return; // Data already exists
+    }
+
+    // Create sample products from MemStorage
+    const memStorage = new MemStorage();
+    const sampleProducts = await memStorage.getProducts();
+    
+    for (const product of sampleProducts) {
+      const { id, ...insertProduct } = product;
+      await databaseStorage.createProduct(insertProduct as InsertProduct);
+    }
+    
+    console.log("Sample data initialized successfully");
+  } catch (error) {
+    console.error("Error initializing sample data:", error);
+  }
+}
+
+export const storage = databaseStorage;
+
+// Initialize sample data on startup
+initializeSampleData();
