@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
+import { useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import type { Product } from "@shared/schema";
@@ -8,6 +9,11 @@ export default function HomePage() {
   const { data: products, isLoading } = useQuery<Product[]>({
     queryKey: ["/api/products"],
   });
+
+  // Update page title for homepage
+  useEffect(() => {
+    document.title = "Virgio - The Only Good Fashion Company | Sustainable Women's Clothing";
+  }, []);
 
   if (isLoading) {
     return (

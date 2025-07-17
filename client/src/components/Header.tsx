@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Search, Heart, ShoppingBag } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "wouter";
 import type { CartItem } from "@shared/schema";
 
 export default function Header() {
@@ -8,11 +9,14 @@ export default function Header() {
 
   const { data: cartItems } = useQuery<CartItem[]>({
     queryKey: ["/api/cart"],
-    onSuccess: (data) => {
-      const count = data?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-      setCartCount(count);
-    },
   });
+
+  useEffect(() => {
+    if (cartItems) {
+      const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+      setCartCount(count);
+    }
+  }, [cartItems]);
 
   return (
     <header className="border-b border-gray-200 bg-white sticky top-0 z-50">
@@ -20,11 +24,13 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <img 
-              src="https://cdn.shopify.com/oxygen-v2/23879/21990/45558/2073582/build/_assets/VirgioIcon-dark-LIXEJ3S2.svg" 
-              alt="Virgio" 
-              className="h-8 w-auto"
-            />
+            <Link href="/">
+              <img 
+                src="https://cdn.shopify.com/oxygen-v2/23879/21990/45558/2073582/build/_assets/VirgioIcon-dark-LIXEJ3S2.svg" 
+                alt="Virgio" 
+                className="h-8 w-auto cursor-pointer"
+              />
+            </Link>
           </div>
           
           {/* Navigation Icons */}
