@@ -4,13 +4,15 @@ import { Heart, Info, Truck, DollarSign, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import AIInsights from "@/components/AIInsights";
 import type { Product } from "@shared/schema";
 
 interface ProductInfoProps {
   product: Product;
+  onFindOutWhy?: () => void;
 }
 
-export default function ProductInfo({ product }: ProductInfoProps) {
+export default function ProductInfo({ product, onFindOutWhy }: ProductInfoProps) {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [isWishlisted, setIsWishlisted] = useState(false);
   const { toast } = useToast();
@@ -156,6 +158,15 @@ export default function ProductInfo({ product }: ProductInfoProps) {
           <p className="text-sm text-gray-500">{product.modelInfo}</p>
         )}
       </div>
+
+      {/* AI Insights */}
+      {onFindOutWhy && (
+        <AIInsights 
+          product={product} 
+          selectedSize={selectedSize} 
+          onFindOutWhy={onFindOutWhy} 
+        />
+      )}
 
       {/* Add to Cart Section */}
       <div className="space-y-4">

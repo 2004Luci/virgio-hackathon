@@ -8,6 +8,8 @@ import ProductInfo from "@/components/ProductInfo";
 import ProductDetails from "@/components/ProductDetails";
 import RelatedProducts from "@/components/RelatedProducts";
 import Footer from "@/components/Footer";
+import FindOutWhy from "@/components/FindOutWhy";
+import CostOfWearing from "@/components/CostOfWearing";
 import type { Product } from "@shared/schema";
 
 export default function ProductPage() {
@@ -29,6 +31,14 @@ export default function ProductPage() {
       document.title = `${product.collection ? product.collection + ' - ' : ''}${product.name} | Virgio`;
     }
   }, [product]);
+
+  // Scroll to Find Out Why section
+  const scrollToFindOutWhy = () => {
+    const element = document.getElementById('find-out-why');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   if (isLoading) {
     return (
@@ -68,10 +78,20 @@ export default function ProductPage() {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
           <ProductImageGallery product={product} />
-          <ProductInfo product={product} />
+          <ProductInfo product={product} onFindOutWhy={scrollToFindOutWhy} />
         </div>
         
         <ProductDetails product={product} />
+        
+        {/* Find Out Why Section */}
+        <div className="mt-12">
+          <FindOutWhy product={product} />
+        </div>
+        
+        {/* Cost of Wearing Section */}
+        <div className="mt-8">
+          <CostOfWearing product={product} />
+        </div>
         
         {filteredRelatedProducts.length > 0 && (
           <RelatedProducts products={filteredRelatedProducts} />

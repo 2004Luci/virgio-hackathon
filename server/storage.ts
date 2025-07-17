@@ -1,4 +1,26 @@
-import { users, products, cartItems, type User, type InsertUser, type Product, type InsertProduct, type CartItem, type InsertCartItem } from "@shared/schema";
+import { 
+  users, 
+  products, 
+  cartItems,
+  adminUsers, 
+  sizeRecommendations,
+  purchaseHistory,
+  notificationSignups,
+  type User, 
+  type InsertUser, 
+  type Product, 
+  type InsertProduct, 
+  type CartItem, 
+  type InsertCartItem,
+  type AdminUser,
+  type InsertAdminUser,
+  type SizeRecommendation,
+  type InsertSizeRecommendation,
+  type PurchaseHistory,
+  type InsertPurchaseHistory,
+  type NotificationSignup,
+  type InsertNotificationSignup
+} from "@shared/schema";
 import { db } from "./db";
 import { eq } from "drizzle-orm";
 
@@ -16,6 +38,25 @@ export interface IStorage {
   addToCart(item: InsertCartItem): Promise<CartItem>;
   updateCartItem(id: number, quantity: number): Promise<CartItem | undefined>;
   removeFromCart(id: number): Promise<boolean>;
+
+  // Admin functions
+  getAdminByUsername(username: string): Promise<AdminUser | undefined>;
+  createAdmin(admin: InsertAdminUser): Promise<AdminUser>;
+  
+  // Size recommendations
+  getSizeRecommendation(productId: number, userId: string): Promise<SizeRecommendation | undefined>;
+  createSizeRecommendation(recommendation: InsertSizeRecommendation): Promise<SizeRecommendation>;
+  updateSizeRecommendationAcceptance(id: number, accepted: boolean, actualSize?: string): Promise<void>;
+  
+  // Purchase history
+  getPurchaseHistory(userId: string): Promise<PurchaseHistory[]>;
+  createPurchaseHistory(history: InsertPurchaseHistory): Promise<PurchaseHistory>;
+  
+  // Notification signups
+  createNotificationSignup(signup: InsertNotificationSignup): Promise<NotificationSignup>;
+  
+  // Analytics
+  getAnalyticsData(): Promise<any>;
 }
 
 export class MemStorage implements IStorage {
@@ -446,6 +487,109 @@ export class DatabaseStorage implements IStorage {
     const result = await db.delete(cartItems).where(eq(cartItems.id, id));
     return (result.rowCount || 0) > 0;
   }
+
+  // Admin functions
+  async getAdminByUsername(username: string): Promise<AdminUser | undefined> {
+    const [admin] = await db.select().from(adminUsers).where(eq(adminUsers.username, username));
+    return admin || undefined;
+  }
+
+  async createAdmin(insertAdmin: InsertAdminUser): Promise<AdminUser> {
+    const [admin] = await db
+      .insert(adminUsers)
+      .values(insertAdmin)
+      .returning();
+    return admin;
+  }
+
+  // Size recommendations
+  async getSizeRecommendation(productId: number, userId: string): Promise<SizeRecommendation | undefined> {
+    const [recommendation] = await db
+      .select()
+      .from(sizeRecommendations)
+      .where(eq(sizeRecommendations.productId, productId))
+      .where(eq(sizeRecommendations.userId, userId));
+    return recommendation || undefined;
+  }
+
+  async createSizeRecommendation(insertRecommendation: InsertSizeRecommendation): Promise<SizeRecommendation> {
+    const [recommendation] = await db
+      .insert(sizeRecommendations)
+      .values(insertRecommendation)
+      .returning();
+    return recommendation;
+  }
+
+  async updateSizeRecommendationAcceptance(id: number, accepted: boolean, actualSize?: string): Promise<void> {
+    await db
+      .update(sizeRecommendations)
+      .set({ accepted, actualSize })
+      .where(eq(sizeRecommendations.id, id));
+  }
+
+  // Purchase history
+  async getPurchaseHistory(userId: string): Promise<PurchaseHistory[]> {
+    return await db.select().from(purchaseHistory).where(eq(purchaseHistory.userId, userId));
+  }
+
+  async createPurchaseHistory(insertHistory: InsertPurchaseHistory): Promise<PurchaseHistory> {
+    const [history] = await db
+      .insert(purchaseHistory)
+      .values(insertHistory)
+      .returning();
+    return history;
+  }
+
+  // Notification signups
+  async createNotificationSignup(insertSignup: InsertNotificationSignup): Promise<NotificationSignup> {
+    const [signup] = await db
+      .insert(notificationSignups)
+      .values(insertSignup)
+      .returning();
+    return signup;
+  }
+
+  // Analytics
+  async getAnalyticsData(): Promise<any> {
+    // Generate dummy analytics data
+    return {
+      fabricReturns: {
+        "Cotton": 12,
+        "Viscose": 8,
+        "Linen": 5,
+        "Polyester": 15,
+        "Silk": 3
+      },
+      fabricExchanges: {
+        "Cotton": 7,
+        "Viscose": 4,
+        "Linen": 2,
+        "Polyester": 9,
+        "Silk": 1
+      },
+      returnReasons: {
+        "Size too small": 35,
+        "Size too large": 28,
+        "Quality issues": 12,
+        "Color mismatch": 8,
+        "Fabric feel": 10,
+        "Style preference": 7
+      },
+      sizeRecommendationAcceptance: {
+        "2024-01": 78,
+        "2024-02": 82,
+        "2024-03": 85,
+        "2024-04": 88,
+        "2024-05": 91,
+        "2024-06": 89,
+        "2024-07": 93
+      },
+      sizingData: {
+        golden: { S: 1, M: 2, L: 2, XL: 1 },
+        actual: { S: 0.8, M: 2.1, L: 1.9, XL: 1.2 }
+      }
+    };
+  }
 }
 
 // Initialize with database storage
@@ -467,6 +611,41 @@ async function initializeSampleData() {
     for (const product of sampleProducts) {
       const { id, ...insertProduct } = product;
       await databaseStorage.createProduct(insertProduct as InsertProduct);
+    }
+
+    // Create default admin user
+    try {
+      const existingAdmin = await databaseStorage.getAdminByUsername("admin");
+      if (!existingAdmin) {
+        await databaseStorage.createAdmin({
+          username: "admin",
+          password: "admin123", // In production, use proper password hashing
+          role: "admin"
+        });
+        console.log("Default admin user created: admin/admin123");
+      }
+    } catch (error) {
+      console.log("Admin user may already exist");
+    }
+
+    // Create sample size recommendations and purchase history
+    try {
+      await databaseStorage.createSizeRecommendation({
+        productId: 1,
+        userId: "user123",
+        recommendedSize: "M",
+        reason: "Based on fabric stretchability and past purchases"
+      });
+
+      await databaseStorage.createPurchaseHistory({
+        userId: "user123",
+        productId: 1,
+        size: "S",
+        returned: true,
+        returnReason: "Size too small"
+      });
+    } catch (error) {
+      console.log("Sample analytics data may already exist");
     }
     
     console.log("Sample data initialized successfully");

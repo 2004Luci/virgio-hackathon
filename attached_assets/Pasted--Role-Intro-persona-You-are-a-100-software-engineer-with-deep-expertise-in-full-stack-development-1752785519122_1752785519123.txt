@@ -1,0 +1,125 @@
+
+Role Intro (persona)
+You are a 100× software engineer with deep expertise in full‑stack development, UI/UX design, enterprise architecture, and scalable, maintainable codebases. You consistently deliver high‑quality, production‑ready applications with pixel‑perfect aesthetics and robust real-world functionality.
+
+🚀 Project Goals
+Build a seamlessly integrated e‑commerce application that includes:
+
+One customer-facing front-end product page (already built)
+
+Two admin dashboard pages, merged into the same application and authenticated
+
+All parts must share data models, APIs, authentication, and consistent design.
+
+1. Front-End Product Page Enhancements
+Use the existing page at
+https://www.virgio.com/products/timeless-charm-alara-viscose-relaxed-lace-tie-pants
+as the pixel‑perfect reference for layout, spacing, typography, colors, image gallery, zoom, buttons, responsive behavior, etc.
+
+Add an AI Insights container right below the “Select Size” dropdown:
+Show personalized size recommendation messages like:
+
+“Considering the fabric stretchability and based on your past purchases and returns, we recommend going one size up for optimal comfort.”
+
+If the recommended size is out of stock, show:
+
+A “Notify me” button
+
+A persuasive note:
+
+“This size is currently unavailable—click Notify me, and meanwhile check ‘Find out why?’ below.”
+
+Always include a <p> tag labeled “Find out why?” — clicking it should smoothly scroll the page down to a detailed “Find out why?” section.
+
+Add the “Find out why?” section below the Fabric & Product Details section:
+This section explains the AI decision:
+
+fabric stretchability rating
+
+fit profile
+
+customer’s past purchase & return history
+
+Include a summary explanation, e.g.:
+
+“We noted you returned last denim jeans as they ran small—denim has low stretch, so we recommend sizing up.”
+
+Add a “Cost of wearing this garment” dropdown just above the “You may also like” section:
+The dropdown should reveal details like:
+
+Approximate cost per wear
+
+Sustainability/usage insights (e.g., wash cycles)
+
+2. Admin Dashboard
+Admin Authentication
+Add a dedicated /admin route for login
+
+After successful login, redirect to /admin/dashboard
+
+Dashboard Routes & Tabs
+Use two tabs/pages:
+
+Material & Product Analytics
+
+Sourcing Analytics
+
+Ensure the admin section is integrated with shared data/API as the front-end
+
+2.1 Material & Product Analytics Tab
+Use a Shopify-style analytics UI template or any polished analytics dashboard design
+
+Use dummy data and present via attractive charts (bar, pie, etc.)
+
+Dummy Analytics to include:
+
+Fabric-wise returns count per fabric type
+
+Fabric-wise exchanges count
+
+Return/Exchange reasons breakdown
+
+“How many users agreed to our size recommendation” count or % — charted over time
+
+2.2 Sourcing Analytics Tab
+Build 4 dashboard cards for sizes: S, M, L, XL
+
+Define a “golden production ratio” default of 1:2:2:1
+
+Based on dummy user selections over the month, recalculate and display the actual monthly ratio, e.g.:
+
+“Golden ratio: 1:2:2:1 vs Actual this month: 0.8 : 2.1 : 1.9 : 1.2”
+
+📦 Integration Notes
+Backend: Provide REST or GraphQL endpoints for:
+
+Product data (with stock info)
+
+Customer purchase/return history (dummy)
+
+Admin analytics data
+
+Notification signup
+
+Frontend:
+
+Consume these APIs in both product page and admin dashboards
+
+Implement smooth scrolling and state-driven interactions
+
+✅ Deliverables
+Pixel‑perfect enhancements on the existing product page
+
+Working AI Insights section + “Find out why?” scroll
+
+“Cost of wearing” dropdown
+
+Fully-functional /admin login + protected /admin/dashboard
+
+Two integrated dashboard tabs with polished charts and dummy data
+
+Consistent UI/UX, shared components, styling, theming
+
+Clean, scalable, well-structured code with comments
+
+Outcome: A fully integrated frontend + admin system with AI‑powered size insights, complete product page enhancements, and sophisticated admin analytics—ready for next‑phase expansion.

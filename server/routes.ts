@@ -110,6 +110,87 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin authentication
+  app.post("/api/admin/login", async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      const admin = await storage.getAdminByUsername(username);
+      
+      if (!admin || admin.password !== password) {
+        return res.status(401).json({ message: "Invalid credentials" });
+      }
+      
+      // In production, use proper JWT or session management
+      res.json({ 
+        message: "Login successful", 
+        admin: { id: admin.id, username: admin.username, role: admin.role } 
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Login failed" });
+    }
+  });
+
+  // Get analytics data
+  app.get("/api/admin/analytics", async (req, res) => {
+    try {
+      const analyticsData = await storage.getAnalyticsData();
+      res.json(analyticsData);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch analytics data" });
+    }
+  });
+
+  // Get size recommendation for product and user
+  app.get("/api/size-recommendation/:productId/:userId", async (req, res) => {
+    try {
+      const productId = parseInt(req.params.productId);
+      const userId = req.params.userId;
+      const recommendation = await storage.getSizeRecommendation(productId, userId);
+      
+      if (!recommendation) {
+        // Generate a dummy recommendation
+        const dummyRecommendation = {
+          productId,
+          userId,
+          recommendedSize: "M",
+          reason: "Considering the fabric stretchability and based on your past purchases and returns, we recommend going one size up for optimal comfort."
+        };
+        return res.json(dummyRecommendation);
+      }
+      
+      res.json(recommendation);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get size recommendation" });
+    }
+  });
+
+  // Create notification signup
+  app.post("/api/notification-signup", async (req, res) => {
+    try {
+      const { productId, size, email } = req.body;
+      const signup = await storage.createNotificationSignup({
+        productId: parseInt(productId),
+        size,
+        email
+      });
+      res.json({ message: "Notification signup successful", signup });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create notification signup" });
+    }
+  });
+
+  // Accept/reject size recommendation
+  app.post("/api/size-recommendation/:id/response", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const { accepted, actualSize } = req.body;
+      await storage.updateSizeRecommendationAcceptance(id, accepted, actualSize);
+      res.json({ message: "Recommendation response recorded" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to record recommendation response" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

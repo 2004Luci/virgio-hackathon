@@ -43,6 +43,40 @@ export const cartItems = pgTable("cart_items", {
   sessionId: text("session_id").notNull(),
 });
 
+export const adminUsers = pgTable("admin_users", {
+  id: serial("id").primaryKey(),
+  username: text("username").notNull().unique(),
+  password: text("password").notNull(),
+  role: text("role").notNull().default("admin"),
+});
+
+export const sizeRecommendations = pgTable("size_recommendations", {
+  id: serial("id").primaryKey(),
+  productId: integer("product_id").notNull(),
+  userId: text("user_id").notNull(),
+  recommendedSize: text("recommended_size").notNull(),
+  actualSize: text("actual_size"),
+  accepted: boolean("accepted"),
+  reason: text("reason"),
+});
+
+export const purchaseHistory = pgTable("purchase_history", {
+  id: serial("id").primaryKey(),
+  userId: text("user_id").notNull(),
+  productId: integer("product_id").notNull(),
+  size: text("size").notNull(),
+  returned: boolean("returned").default(false),
+  exchanged: boolean("exchanged").default(false),
+  returnReason: text("return_reason"),
+});
+
+export const notificationSignups = pgTable("notification_signups", {
+  id: serial("id").primaryKey(),
+  productId: integer("product_id").notNull(),
+  size: text("size").notNull(),
+  email: text("email").notNull(),
+});
+
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -56,9 +90,33 @@ export const insertCartItemSchema = createInsertSchema(cartItems).omit({
   id: true,
 });
 
+export const insertAdminUserSchema = createInsertSchema(adminUsers).omit({
+  id: true,
+});
+
+export const insertSizeRecommendationSchema = createInsertSchema(sizeRecommendations).omit({
+  id: true,
+});
+
+export const insertPurchaseHistorySchema = createInsertSchema(purchaseHistory).omit({
+  id: true,
+});
+
+export const insertNotificationSignupSchema = createInsertSchema(notificationSignups).omit({
+  id: true,
+});
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type Product = typeof products.$inferSelect;
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type CartItem = typeof cartItems.$inferSelect;
 export type InsertCartItem = z.infer<typeof insertCartItemSchema>;
+export type AdminUser = typeof adminUsers.$inferSelect;
+export type InsertAdminUser = z.infer<typeof insertAdminUserSchema>;
+export type SizeRecommendation = typeof sizeRecommendations.$inferSelect;
+export type InsertSizeRecommendation = z.infer<typeof insertSizeRecommendationSchema>;
+export type PurchaseHistory = typeof purchaseHistory.$inferSelect;
+export type InsertPurchaseHistory = z.infer<typeof insertPurchaseHistorySchema>;
+export type NotificationSignup = typeof notificationSignups.$inferSelect;
+export type InsertNotificationSignup = z.infer<typeof insertNotificationSignupSchema>;
